@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include <catch2/catch.hpp>
+#include <iostream>
 
 #include "formatters/ParsedNumericConverterFormatter.h"
 #include "formatters/BeatsNumericConverterFormatter.h"
@@ -213,6 +214,8 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
 
                 const auto formattedString
                     =wxString::Format("%03d bar %02d beat", bar + 1, beat + 1);
+
+                std::cout << "riscv-debug: bar " << bar + 1 << " beat " << beat + 1 << " value " << value << std::endl;
 
                 REQUIRE(
                     *basicFormatter->StringToValue(formattedString)
