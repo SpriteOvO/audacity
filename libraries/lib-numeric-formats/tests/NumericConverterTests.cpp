@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include <catch2/catch.hpp>
+#include <iostream>
 
 #include "formatters/ParsedNumericConverterFormatter.h"
 #include "formatters/BeatsNumericConverterFormatter.h"
@@ -26,7 +27,7 @@
 TEST_CASE("ParsedNumericConverterFormatter", "")
 {
    auto context = FormatterContext::SampleRateContext(44100.0);
-   
+
    auto hhmmssFormatter = CreateParsedNumericConverterFormatter(
       context, NumericConverterType_TIME(), Verbatim("0100 h 060 m 060 s"));
 
@@ -72,14 +73,14 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
 {
    MockedPrefs mockedPrefs;
    MockedAudio mockedAudio;
-   
+
    auto project = AudacityProject::Create();
    auto& timeSignature = ProjectTimeSignature::Get(*project);
-   
+
    timeSignature.SetTempo(120.0);
    timeSignature.SetUpperTimeSignature(3);
    timeSignature.SetLowerTimeSignature(4);
-   
+
    auto basicFormatter = CreateBeatsNumericConverterFormatter(FormatterContext::ProjectContext(*project));
 
    REQUIRE(
@@ -218,6 +219,8 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
             const auto formattedString =
                wxString::Format("%03d bar %02d beat", bar + 1, beat + 1);
 
+            std::cout << "riscv-debug: tempo " << tempo << " bar " << bar + 1 << " beat " << beat + 1 << " value " << value << std::endl;
+
             REQUIRE(
                *basicFormatter->StringToValue(formattedString) ==
                Approx(value));
@@ -233,6 +236,7 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
 
    longFormatterTest(88);
    longFormatterTest(117);
+   REQUIRE(false);
 }
 
 
