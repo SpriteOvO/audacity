@@ -11,6 +11,7 @@
 #include "BeatsNumericConverterFormatter.h"
 
 #include <algorithm>
+#include <iostream>
 #include <array>
 #include <cmath>
 
@@ -36,6 +37,10 @@ constexpr size_t Get10Pow (size_t pow)
 const auto BarString = XO("bar");
 /* i18n-hint: The music theory "beat" */
 const auto BeatString = XO("beat");
+
+uint64_t show(double value) {
+   return *(uint64_t*)&value;
+}
 
 class BeatsFormatter final :
     public NumericConverterFormatter,
@@ -249,6 +254,10 @@ public:
       const auto eps =
          1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
 
+      std::cout << "    eps=" << eps
+                << " mFieldValueOffset=" << mFieldValueOffset
+                << " value=" << value << "=" << std::hex << show(value) << std::dec << std::endl;
+
       for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
       {
          const auto fieldLength = mFieldLengths[fieldIndex];
@@ -259,6 +268,13 @@ public:
             mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
 
          value = value - fieldValue * fieldLength;
+         std::cout << "    i=" << fieldIndex
+                   << " fieldLength=" << fieldLength << "=" << std::hex << show(fieldLength) << std::dec
+                   << " fieldValue=" << fieldValue
+                   << " formatStr=" << mFields[fieldIndex].formatStr
+                   << " fieldValueString=" << result.fieldValueStrings[fieldIndex]
+                   << " value=" << value << "=" << std::hex << show(value) << std::dec
+                   << std::endl;
       }
 
       UpdateResultString(result);
